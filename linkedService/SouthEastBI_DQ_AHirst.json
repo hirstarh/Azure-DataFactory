@@ -10,6 +10,10 @@
 			"encrypt": "optional",
 			"trustServerCertificate": true,
 			"authenticationType": "SystemAssignedManagedIdentity"
+		},
+		"connectVia": {
+			"referenceName": "udal-adf-mart-southeastbi-IR",
+			"type": "IntegrationRuntimeReference"
 		}
 	}
 }
