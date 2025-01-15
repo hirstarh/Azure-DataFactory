@@ -4,7 +4,7 @@
 		"description": "Test pipeline to execute a stored procedure southeastbi.usp_DQSPTest ",
 		"activities": [
 			{
-				"name": "SouthEastBI_Execute_usp_DQSPTest",
+				"name": "SouthEastBI_Pipeline_DQ_AHirst",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
 				"policy": {
