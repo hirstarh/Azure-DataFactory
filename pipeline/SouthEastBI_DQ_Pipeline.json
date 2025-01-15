@@ -1,0 +1,31 @@
+{
+	"name": "SouthEastBI_DQ_Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "southeastBI_SP_DQ",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[southeastbi].[usp_DQSPTest]"
+				},
+				"linkedServiceName": {
+					"referenceName": "SouthEastBI_DQ_AHirst",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "DQ_Automation"
+		},
+		"annotations": []
+	}
+}
