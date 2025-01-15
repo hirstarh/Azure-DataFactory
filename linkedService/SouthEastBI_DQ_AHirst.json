@@ -1,0 +1,15 @@
+{
+	"name": "SouthEastBI_DQ_AHirst",
+	"properties": {
+		"description": "Andrew Hirst - Testing out pipelines taking DQ data from the SQL table to place in a csv file.",
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "Udalsqlmartprod.database.windows.net",
+			"database": "udal-sql-mart-qpat",
+			"encrypt": "optional",
+			"trustServerCertificate": true,
+			"authenticationType": "SystemAssignedManagedIdentity"
+		}
+	}
+}
