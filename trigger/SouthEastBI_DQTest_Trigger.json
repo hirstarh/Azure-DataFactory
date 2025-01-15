@@ -1,0 +1,25 @@
+{
+	"name": "SouthEastBI_DQTest_Trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "SouthEastBI_Pipeline_DQ_AHirst",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2025-01-15T11:12:00",
+				"endTime": "2025-01-16T11:50:00",
+				"timeZone": "Greenwich Standard Time"
+			}
+		}
+	}
+}
