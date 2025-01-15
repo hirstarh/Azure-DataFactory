@@ -9,6 +9,12 @@
 					"referenceName": "SouthEastBI_Pipeline_DQ_AHirst",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "SouthEastBI_Pipeline_DQ_AHirst",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
