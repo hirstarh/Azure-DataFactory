@@ -2,7 +2,7 @@
 	"name": "SouthEastBI_DQ_Trigger",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
@@ -23,7 +23,6 @@
 				"frequency": "Minute",
 				"interval": 15,
 				"startTime": "2025-01-15T11:22:00",
-				"endTime": "2025-01-16T11:55:00",
 				"timeZone": "GMT Standard Time"
 			}
 		}
