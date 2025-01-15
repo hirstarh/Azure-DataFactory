@@ -1,0 +1,31 @@
+{
+	"name": "month_EXECUTE usp_SUS_Spinal_Overview",
+	"properties": {
+		"activities": [
+			{
+				"name": "EXECUTE",
+				"description": "Executes usp_SUS_Spinal_Overview",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[southeastbi].[usp_SUS_Spinal_Overview]"
+				},
+				"linkedServiceName": {
+					"referenceName": "mart_SQLDB_LS",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-11-27T13:42:19Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

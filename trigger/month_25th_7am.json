@@ -1,0 +1,36 @@
+{
+	"name": "month_25th_7am",
+	"properties": {
+		"description": "Runs each month on the 25th",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "month_EXECUTE usp_SUS_Spinal_Overview",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Month",
+				"interval": 1,
+				"startTime": "2024-11-14T08:09:00",
+				"timeZone": "GMT Standard Time",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						7
+					],
+					"monthDays": [
+						25
+					]
+				}
+			}
+		}
+	}
+}

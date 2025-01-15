@@ -1,0 +1,837 @@
+{
+	"name": "AdhocLoad",
+	"properties": {
+		"activities": [
+			{
+				"name": "ConfigLookupExcel",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"dataset": {
+						"referenceName": "AdhocExcelConfig",
+						"type": "DatasetReference",
+						"parameters": {
+							"Sheet": "ExcelSource"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEachExcel",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "ConfigLookupExcel",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('ConfigLookupExcel').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "WriteToDB",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "ExcelSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{item().PreCopySQL}",
+										"type": "Expression"
+									},
+									"writeBehavior": {
+										"value": "@item().InsertUpsert",
+										"type": "Expression"
+									},
+									"sqlWriterUseTableLock": false,
+									"upsertSettings": {
+										"useTempDB": true,
+										"keys": {
+											"value": "@CreateArray(item().UpsertID)",
+											"type": "Expression"
+										}
+									},
+									"tableOption": {
+										"value": "@{item().CreateNewTable}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "AdhocExcelSource",
+									"type": "DatasetReference",
+									"parameters": {
+										"Filename": {
+											"value": "@item().FileName",
+											"type": "Expression"
+										},
+										"Sheet": {
+											"value": "@item().Sheet",
+											"type": "Expression"
+										},
+										"Range": {
+											"value": "@item().Range",
+											"type": "Expression"
+										},
+										"FirstRowHeaders": {
+											"value": "@item().FirstRowHeaders",
+											"type": "Expression"
+										},
+										"NullValue": {
+											"value": "@item().NullValue",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AdhocDataMartSink",
+									"type": "DatasetReference",
+									"parameters": {
+										"Table": {
+											"value": "@item().TableName",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "SuccessfulLogging",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "WriteToDB",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "mart_SQLDB_LS",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"parameters": [
+											{
+												"name": "Filename",
+												"type": "String",
+												"value": {
+													"value": "@item().Filename",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "ExcelSheet",
+												"type": "String",
+												"value": {
+													"value": "@item().Sheet",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "Range",
+												"type": "String",
+												"value": {
+													"value": "@item().Range",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "FlatFileDelimiter",
+												"type": "String",
+												"value": null,
+												"direction": "Input"
+											},
+											{
+												"name": "Schema",
+												"type": "String",
+												"value": "SouthEastBI_SelfLoading",
+												"direction": "Input"
+											},
+											{
+												"name": "TableName",
+												"type": "String",
+												"value": {
+													"value": "@item().TableName",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "RowsWritten",
+												"type": "Int32",
+												"value": {
+													"value": "@activity('WriteToDB').output.rowsCopied",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "InsertUpsert",
+												"type": "String",
+												"value": {
+													"value": "@item().InsertUpsert",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "FileType",
+												"type": "String",
+												"value": "Excel",
+												"direction": "Input"
+											}
+										],
+										"type": "NonQuery",
+										"text": "insert into [Admin].[AdhocLogging] ([LoadResult],  [DateLoaded],[Filename],[Filetype],[ExcelSheet],[Range],[FlatFileDelimiter],[TableName],[RowsWritten],[InsertUpsert])\nselect\n'Success'\n,getdate()\n,@Filename\n,@FileType\n,@ExcelSheet\n,@Range\n,@FlatFileDelimiter\n,@Schema + '.' + @TableName\n,@RowsWritten\n,@InsertUpsert"
+									}
+								]
+							}
+						},
+						{
+							"name": "FailedLogging",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "WriteToDB",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "mart_SQLDB_LS",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"parameters": [
+											{
+												"name": "Filename",
+												"type": "String",
+												"value": {
+													"value": "@item().Filename",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "ExcelSheet",
+												"type": "String",
+												"value": {
+													"value": "@item().Sheet",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "Range",
+												"type": "String",
+												"value": {
+													"value": "@item().Range",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "FlatFileDelimiter",
+												"type": "String",
+												"value": null,
+												"direction": "Input"
+											},
+											{
+												"name": "Schema",
+												"type": "String",
+												"value": "SouthEastBI_SelfLoading",
+												"direction": "Input"
+											},
+											{
+												"name": "TableName",
+												"type": "String",
+												"value": {
+													"value": "@item().TableName",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "RowsWritten",
+												"type": "Int32",
+												"value": null,
+												"direction": "Input"
+											},
+											{
+												"name": "InsertUpsert",
+												"type": "String",
+												"value": {
+													"value": "@item().InsertUpsert",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "FileType",
+												"type": "String",
+												"value": "Excel",
+												"direction": "Input"
+											},
+											{
+												"name": "ErrorMessage",
+												"type": "String",
+												"value": {
+													"value": "@activity('WriteToDB').error.message",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											}
+										],
+										"type": "NonQuery",
+										"text": "insert into [Admin].[AdhocLogging] ([LoadResult],  [DateLoaded],[Filename],[Filetype],[ExcelSheet],[Range],[FlatFileDelimiter],[TableName],[RowsWritten],[InsertUpsert],[ErrorMessage])\nselect\n'Failed'\n,getdate()\n,@Filename\n,@FileType\n,@ExcelSheet\n,@Range\n,@FlatFileDelimiter\n,@Schema + '.' + @TableName\n,@RowsWritten\n,@InsertUpsert\n,@ErrorMessage"
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "ConfigLookupFlatfile",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"dataset": {
+						"referenceName": "AdhocExcelConfig",
+						"type": "DatasetReference",
+						"parameters": {
+							"Sheet": "FlatFileSource"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEachFlatfile",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "ConfigLookupFlatfile",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('ConfigLookupFlatfile').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "WriteToDBFlat",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{item().PreCopySQL}",
+										"type": "Expression"
+									},
+									"writeBehavior": {
+										"value": "@item().InsertUpsert",
+										"type": "Expression"
+									},
+									"sqlWriterUseTableLock": false,
+									"upsertSettings": {
+										"useTempDB": true,
+										"keys": {
+											"value": "@CreateArray(item().UpsertID)",
+											"type": "Expression"
+										}
+									},
+									"tableOption": {
+										"value": "@{item().CreateNewTable}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "AdhocFlatFileSource",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@item().Filename",
+											"type": "Expression"
+										},
+										"Delimiter": {
+											"value": "@coalesce(item().Delimiter , ',')",
+											"type": "Expression"
+										},
+										"QuoteCharacter": {
+											"value": "@coalesce(item().QuoteCharacter , '\"')",
+											"type": "Expression"
+										},
+										"NullValue": {
+											"value": "@item().NullValue",
+											"type": "Expression"
+										},
+										"FirstRowHeaders": {
+											"value": "@item().FirstRowHeaders",
+											"type": "Expression"
+										},
+										"Encoding": {
+											"value": "@coalesce(item().Encoding,'UTF-8')",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AdhocDataMartSink",
+									"type": "DatasetReference",
+									"parameters": {
+										"Table": {
+											"value": "@item().TableName",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "SuccessfulLoggingFlat",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "WriteToDBFlat",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "mart_SQLDB_LS",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"parameters": [
+											{
+												"name": "Filename",
+												"type": "String",
+												"value": {
+													"value": "@item().Filename",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "ExcelSheet",
+												"type": "String",
+												"value": null,
+												"direction": "Input"
+											},
+											{
+												"name": "Range",
+												"type": "String",
+												"value": null,
+												"direction": "Input"
+											},
+											{
+												"name": "FlatFileDelimiter",
+												"type": "String",
+												"value": {
+													"value": "@item().Delimiter",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "Schema",
+												"type": "String",
+												"value": "SouthEastBI_SelfLoading",
+												"direction": "Input"
+											},
+											{
+												"name": "TableName",
+												"type": "String",
+												"value": {
+													"value": "@item().TableName",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "RowsWritten",
+												"type": "Int32",
+												"value": {
+													"value": "@activity('WriteToDBFlat').output.rowsCopied",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "InsertUpsert",
+												"type": "String",
+												"value": {
+													"value": "@item().InsertUpsert",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "FileType",
+												"type": "String",
+												"value": "FlatFile",
+												"direction": "Input"
+											}
+										],
+										"type": "NonQuery",
+										"text": "insert into [Admin].[AdhocLogging] ([LoadResult],  [DateLoaded],[Filename],[Filetype],[ExcelSheet],[Range],[FlatFileDelimiter],[TableName],[RowsWritten],[InsertUpsert])\nselect\n'Success'\n,getdate()\n,@Filename\n,@FileType\n,@ExcelSheet\n,@Range\n,@FlatFileDelimiter\n,@Schema + '.' + @TableName\n,@RowsWritten\n,@InsertUpsert"
+									}
+								]
+							}
+						},
+						{
+							"name": "FailedLoggingFlat",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "WriteToDBFlat",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "mart_SQLDB_LS",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"parameters": [
+											{
+												"name": "Filename",
+												"type": "String",
+												"value": {
+													"value": "@item().Filename",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "ExcelSheet",
+												"type": "String",
+												"value": null,
+												"direction": "Input"
+											},
+											{
+												"name": "Range",
+												"type": "String",
+												"value": null,
+												"direction": "Input"
+											},
+											{
+												"name": "FlatFileDelimiter",
+												"type": "String",
+												"value": {
+													"value": "@item().Delimiter",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "Schema",
+												"type": "String",
+												"value": "SouthEastBI_SelfLoading",
+												"direction": "Input"
+											},
+											{
+												"name": "TableName",
+												"type": "String",
+												"value": {
+													"value": "@item().TableName",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "RowsWritten",
+												"type": "Int32",
+												"value": null,
+												"direction": "Input"
+											},
+											{
+												"name": "InsertUpsert",
+												"type": "String",
+												"value": {
+													"value": "@item().InsertUpsert",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											},
+											{
+												"name": "FileType",
+												"type": "String",
+												"value": "Excel",
+												"direction": "Input"
+											},
+											{
+												"name": "ErrorMessage",
+												"type": "String",
+												"value": {
+													"value": "@activity('WriteToDBFlat').error.message",
+													"type": "Expression"
+												},
+												"direction": "Input"
+											}
+										],
+										"type": "NonQuery",
+										"text": "insert into [Admin].[AdhocLogging] ([LoadResult],  [DateLoaded],[Filename],[Filetype],[ExcelSheet],[Range],[FlatFileDelimiter],[TableName],[RowsWritten],[InsertUpsert],[ErrorMessage])\nselect\n'Failed'\n,getdate()\n,@Filename\n,@FileType\n,@ExcelSheet\n,@Range\n,@FlatFileDelimiter\n,@Schema + '.' + @TableName\n,@RowsWritten\n,@InsertUpsert\n,@ErrorMessage"
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "CleanDropZone",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "ForEachExcel",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "ForEachFlatfile",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "AdhocSourceDelete",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "Dropzone"
+						}
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "mart_storage_LS",
+							"type": "LinkedServiceReference"
+						},
+						"path": "southeastbi/AdhocArchive"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*",
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "CleanConfig",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "ForEachExcel",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "ForEachFlatfile",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "AdhocSourceDelete",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": "Config/Adhoc"
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*",
+						"enablePartitionDiscovery": false
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Automation"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-03-11T15:00:43Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

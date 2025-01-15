@@ -1,0 +1,31 @@
+{
+	"name": "wk_EXECUTE usp_WLMDS_WeeklyRefresh",
+	"properties": {
+		"activities": [
+			{
+				"name": "EXECUTE usp_WLMDS_WeeklyRefresh",
+				"description": "Executes southeastbi.usp_WLMDS_WeeklyRefresh",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 360,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[southeastbi].[usp_WLMDS_WeeklyRefresh]"
+				},
+				"linkedServiceName": {
+					"referenceName": "mart_SQLDB_LS",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-12-11T08:10:43Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

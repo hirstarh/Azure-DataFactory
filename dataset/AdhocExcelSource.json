@@ -1,0 +1,60 @@
+{
+	"name": "AdhocExcelSource",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "mart_storage_LS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Filename": {
+				"type": "string"
+			},
+			"Sheet": {
+				"type": "string"
+			},
+			"Range": {
+				"type": "string"
+			},
+			"FirstRowHeaders": {
+				"type": "bool"
+			},
+			"NullValue": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Automation"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": {
+				"value": "@dataset().Sheet",
+				"type": "Expression"
+			},
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().Filename",
+					"type": "Expression"
+				},
+				"folderPath": "Dropzone",
+				"fileSystem": "southeastbi"
+			},
+			"range": {
+				"value": "@dataset().Range",
+				"type": "Expression"
+			},
+			"firstRowAsHeader": {
+				"value": "@dataset().FirstRowHeaders",
+				"type": "Expression"
+			},
+			"nullValue": {
+				"value": "@dataset().NullValue",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

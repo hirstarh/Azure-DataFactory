@@ -1,0 +1,28 @@
+{
+	"name": "AdhocDataMartSink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "mart_SQLDB_LS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Table": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Automation"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "SouthEastBI_SelfLoading",
+			"table": {
+				"value": "@dataset().Table",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

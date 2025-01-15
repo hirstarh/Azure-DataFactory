@@ -1,0 +1,10 @@
+{
+	"name": "sqlDB",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/11f1b987-906d-401f-a2a4-078dcacd4228/resourceGroups/UDAL-RG-DATA-MART-PROD/providers/Microsoft.Sql/servers/udalsqlmartprod",
+		"groupId": "sqlServer",
+		"fqdns": [
+			"udalsqlmartprod.database.windows.net"
+		]
+	}
+}

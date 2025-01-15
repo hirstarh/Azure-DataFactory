@@ -1,0 +1,25 @@
+{
+	"name": "udal-adf-mart-southeastbi-IR",
+	"properties": {
+		"type": "Managed",
+		"description": "udal-adf-mart-southeastbiIntegrationRuntime",
+		"typeProperties": {
+			"computeProperties": {
+				"location": "UK South",
+				"dataFlowProperties": {
+					"computeType": "General",
+					"coreCount": 8,
+					"timeToLive": 5,
+					"cleanup": false
+				}
+			},
+			"customerVirtualNetwork": {
+				"subnetId": "/subscriptions/11f1b987-906d-401f-a2a4-078dcacd4228/resourceGroups/UDAL-RG-DATA-PROD/providers/Microsoft.Network/virtualNetworks/udal-vnet-data-prod/subnets/udal-snet-pep-datamart-prod"
+			}
+		},
+		"managedVirtualNetwork": {
+			"type": "ManagedVirtualNetworkReference",
+			"referenceName": "default"
+		}
+	}
+}

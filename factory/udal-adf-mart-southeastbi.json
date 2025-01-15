@@ -1,0 +1,9 @@
+{
+	"name": "udal-adf-mart-southeastbi",
+	"location": "UK South",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "7981264d-a6f1-438d-a03b-e044d000497e",
+		"tenantId": "eae2146b-01ed-4b70-8a27-caa5804ab9ca"
+	}
+}

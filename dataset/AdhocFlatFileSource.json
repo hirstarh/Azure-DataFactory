@@ -1,0 +1,71 @@
+{
+	"name": "AdhocFlatFileSource",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "mart_storage_LS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"FileName": {
+				"type": "string"
+			},
+			"Delimiter": {
+				"type": "string",
+				"defaultValue": ","
+			},
+			"QuoteCharacter": {
+				"type": "string",
+				"defaultValue": "\""
+			},
+			"NullValue": {
+				"type": "string"
+			},
+			"FirstRowHeaders": {
+				"type": "bool"
+			},
+			"Encoding": {
+				"type": "string",
+				"defaultValue": "UTF-8"
+			}
+		},
+		"folder": {
+			"name": "Automation"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				},
+				"folderPath": "Dropzone",
+				"fileSystem": "southeastbi"
+			},
+			"columnDelimiter": {
+				"value": "@dataset().Delimiter",
+				"type": "Expression"
+			},
+			"encodingName": {
+				"value": "@dataset().Encoding",
+				"type": "Expression"
+			},
+			"escapeChar": "\\",
+			"firstRowAsHeader": {
+				"value": "@dataset().FirstRowHeaders",
+				"type": "Expression"
+			},
+			"nullValue": {
+				"value": "@dataset().NullValue",
+				"type": "Expression"
+			},
+			"quoteChar": {
+				"value": "@dataset().QuoteCharacter",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

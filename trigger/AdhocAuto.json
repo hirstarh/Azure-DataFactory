@@ -1,0 +1,25 @@
+{
+	"name": "AdhocAuto",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "AdhocLoad",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/southeastbi/blobs/Config/Adhoc/",
+			"blobPathEndsWith": ".xlsx",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/11f1b987-906d-401f-a2a4-078dcacd4228/resourceGroups/UDAL-RG-DATA-MART-PROD/providers/Microsoft.Storage/storageAccounts/udalstdatamart",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

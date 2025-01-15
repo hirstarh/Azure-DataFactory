@@ -1,0 +1,79 @@
+{
+	"name": "AdhocExcelConfig",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "mart_storage_LS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Sheet": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Automation"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": {
+				"value": "@dataset().Sheet",
+				"type": "Expression"
+			},
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "FileLoadTemplate.xlsx",
+				"folderPath": "Config/Adhoc",
+				"fileSystem": "southeastbi"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Filename",
+				"type": "String"
+			},
+			{
+				"name": "Sheet",
+				"type": "String"
+			},
+			{
+				"name": "Range",
+				"type": "String"
+			},
+			{
+				"name": "NullValue",
+				"type": "String"
+			},
+			{
+				"name": "FirstRowHeaders",
+				"type": "String"
+			},
+			{
+				"name": "TableSchema",
+				"type": "String"
+			},
+			{
+				"name": "TableName",
+				"type": "String"
+			},
+			{
+				"name": "InsertUpsert",
+				"type": "String"
+			},
+			{
+				"name": "UpsertID",
+				"type": "String"
+			},
+			{
+				"name": "CreateNewTable",
+				"type": "String"
+			},
+			{
+				"name": "PreCopySQL",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

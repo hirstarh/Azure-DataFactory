@@ -1,0 +1,15 @@
+{
+	"name": "mart_SQLDB_LS",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=udalsqlmartprod.database.windows.net;Initial Catalog=udal-sql-mart-qpat"
+		},
+		"connectVia": {
+			"referenceName": "udal-adf-mart-southeastbi-IR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
