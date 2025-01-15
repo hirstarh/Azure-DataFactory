@@ -5,7 +5,7 @@
 		"annotations": [],
 		"type": "AzureSqlDatabase",
 		"typeProperties": {
-			"server": "Udalsqlmartprod.database.windows.net",
+			"server": "https://udalstdatamart.dfs.core.windows.net",
 			"database": "udal-sql-mart-qpat",
 			"encrypt": "optional",
 			"trustServerCertificate": true,
