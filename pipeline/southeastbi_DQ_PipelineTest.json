@@ -15,12 +15,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[southeastbi].[usp_DQSPTest]",
-					"storedProcedureParameters": {
-						"undefined": {
-							"value": ""
-						}
-					}
+					"storedProcedureName": "[southeastbi].[usp_DQSPTest]"
 				},
 				"linkedServiceName": {
 					"referenceName": "SouthEastBI_DQ_AHirst",
