@@ -44,7 +44,53 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Users/andrewh@arhsvcs.com/electroniz_curation_notebook"
+					"notebookPath": "/Users/andrewh@arhsvcs.com/electroniz_curation_notebook",
+					"baseParameters": {
+						"STORAGE_ACCOUNT": {
+							"value": "@pipeline().parameters.STORAGE_ACCOUNT",
+							"type": "Expression"
+						},
+						"BRONZE_LAYER_NAMESPACE": {
+							"value": "@pipeline().parameters.BRONZE_LAYER_NAMESPACE",
+							"type": "Expression"
+						},
+						"SILVER_LAYER_NAMESPACE": {
+							"value": "@pipeline().parameters.SILVER_LAYER_NAMESPACE",
+							"type": "Expression"
+						},
+						"STORE_SALES_FOLDER": {
+							"value": "@pipeline().parameters.STORE_SALES_FOLDER",
+							"type": "Expression"
+						},
+						"ADLS_FOLDER": {
+							"value": "@pipeline().parameters.ADLS_FOLDER",
+							"type": "Expression"
+						},
+						"TABLE_LIST": {
+							"value": "@pipeline().parameters.TABLE_LIST",
+							"type": "Expression"
+						},
+						"CURRENCY_LIST": {
+							"value": "@pipeline().parameters.CURRENCY_LIST",
+							"type": "Expression"
+						},
+						"GEOLOCATION_FOLDER": {
+							"value": "@pipeline().parameters.GEOLOCATION_FOLDER",
+							"type": "Expression"
+						},
+						"LOGS_FOLDER": {
+							"value": "@pipeline().parameters.LOGS_FOLDER",
+							"type": "Expression"
+						},
+						"ECOMM_FOLDER": {
+							"value": "@pipeline().parameters.ECOMM_FOLDER",
+							"type": "Expression"
+						},
+						"ADLS_KEY": {
+							"value": "@activity('Get Secret').output.value",
+							"type": "Expression"
+						}
+					}
 				},
 				"linkedServiceName": {
 					"referenceName": "Curation Spark Cluster",
