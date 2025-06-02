@@ -19,7 +19,8 @@
 					"method": "GET",
 					"url": "https://electrainingkv110.vault.azure.net/secrets/ADLSKEY/df3b85b078fc45e69c10cf6b4f98fdbc?api-version=7.0",
 					"authentication": {
-						"type": "UserAssignedManagedIdentity"
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
 					}
 				}
 			},
