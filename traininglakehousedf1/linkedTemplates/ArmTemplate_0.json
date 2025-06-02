@@ -250,6 +250,10 @@
 								"ADLS_KEY": {
 									"value": "@activity('Get Secret').output.value",
 									"type": "Expression"
+								},
+								"CURRENCY_FOLDER": {
+									"value": "@pipeline().parameters.CURRENCY_FOLDER",
+									"type": "Expression"
 								}
 							}
 						},
