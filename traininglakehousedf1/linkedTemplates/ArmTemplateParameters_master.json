@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "traininglakehousedf1"
+		},
+		"Curation Spark Cluster_accessToken": {
+			"value": ""
+		},
+		"salesdbsource_password": {
+			"value": ""
+		},
+		"traininglakehouse_accountKey": {
+			"value": ""
+		},
+		"websitetrackinglogs_connectionString": {
+			"value": ""
+		},
+		"Curation Spark Cluster_properties_typeProperties_existingClusterId": {
+			"value": "0528-044328-qlwinjat"
+		},
+		"httpsource_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/PacktPublishing/Data-Engineering-with-Apache-Spark-Delta-Lake-and-Lakehouse/main/project/prep/iplocation/IP2LOCATION-LITE-DB1.CSV"
+		},
+		"restsource_properties_typeProperties_url": {
+			"value": "https://prepaid.currconv.com/api/v7/convert?"
+		},
+		"salesdbsource_properties_typeProperties_server": {
+			"value": "salesdb102.database.windows.net"
+		},
+		"salesdbsource_properties_typeProperties_database": {
+			"value": "salesdb"
+		},
+		"salesdbsource_properties_typeProperties_userName": {
+			"value": "salesadmin"
+		},
+		"traininglakehouse_properties_typeProperties_url": {
+			"value": "https://electraininglakehouse100.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
