@@ -186,7 +186,7 @@
 						}
 					},
 					{
-						"name": "Curation Notebook",
+						"name": "Run Curation Notebook",
 						"type": "DatabricksNotebook",
 						"dependsOn": [
 							{
