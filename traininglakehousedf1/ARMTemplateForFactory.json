@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'Curation Spark Cluster'"
 		},
+		"Synapse Serverless_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Synapse Serverless'"
+		},
 		"salesdbsource_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'salesdbsource'"
@@ -26,6 +30,18 @@
 		"Curation Spark Cluster_properties_typeProperties_existingClusterId": {
 			"type": "string",
 			"defaultValue": "0528-044328-qlwinjat"
+		},
+		"Synapse Serverless_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "trainingsynapse100-ondemand.sql.azuresynapse.net"
+		},
+		"Synapse Serverless_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "gold"
+		},
+		"Synapse Serverless_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqladminuser"
 		},
 		"httpsource_properties_typeProperties_url": {
 			"type": "string",
@@ -56,6 +72,62 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/electroniz_aggregation_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "This pipeline will aggregate data from the sales database, currency conversion, geo-location, and excommerce website tracking",
+				"activities": [
+					{
+						"name": "Get Secret",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "GET",
+							"headers": {},
+							"url": "https://electrainingkv110.vault.azure.net/secrets/ADLSSASKEY/905581813d92423abab867edf11c6d51?api-version=7.0",
+							"authentication": {
+								"type": "UserAssignedManagedIdentity"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"EXT_TAB_FORMAT": {
+						"type": "string"
+					},
+					"EXT_DATA_SOURCE": {
+						"type": "string"
+					},
+					"EXT_CREDENTIALS": {
+						"type": "string"
+					},
+					"EXT_TAB_LOCATION": {
+						"type": "string"
+					},
+					"SILVER_LAYER_NAMESPACE": {
+						"type": "string"
+					},
+					"GOLD_LAYER_NAMESPACE": {
+						"type": "string"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/electroniz_batch_ingestion_pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -1006,6 +1078,28 @@
 						"value": "[parameters('Curation Spark Cluster_accessToken')]"
 					},
 					"existingClusterId": "[parameters('Curation Spark Cluster_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Synapse Serverless')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('Synapse Serverless_properties_typeProperties_server')]",
+					"database": "[parameters('Synapse Serverless_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('Synapse Serverless_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Synapse Serverless_password')]"
+					}
 				}
 			},
 			"dependsOn": []

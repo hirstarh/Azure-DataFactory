@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'Curation Spark Cluster'"
 		},
+		"Synapse Serverless_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Synapse Serverless'"
+		},
 		"salesdbsource_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'salesdbsource'"
@@ -26,6 +30,18 @@
 		"Curation Spark Cluster_properties_typeProperties_existingClusterId": {
 			"type": "string",
 			"defaultValue": "0528-044328-qlwinjat"
+		},
+		"Synapse Serverless_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "trainingsynapse100-ondemand.sql.azuresynapse.net"
+		},
+		"Synapse Serverless_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "gold"
+		},
+		"Synapse Serverless_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqladminuser"
 		},
 		"httpsource_properties_typeProperties_url": {
 			"type": "string",
@@ -81,6 +97,9 @@
 					"Curation Spark Cluster_accessToken": {
 						"value": "[parameters('Curation Spark Cluster_accessToken')]"
 					},
+					"Synapse Serverless_password": {
+						"value": "[parameters('Synapse Serverless_password')]"
+					},
 					"salesdbsource_password": {
 						"value": "[parameters('salesdbsource_password')]"
 					},
@@ -92,6 +111,15 @@
 					},
 					"Curation Spark Cluster_properties_typeProperties_existingClusterId": {
 						"value": "[parameters('Curation Spark Cluster_properties_typeProperties_existingClusterId')]"
+					},
+					"Synapse Serverless_properties_typeProperties_server": {
+						"value": "[parameters('Synapse Serverless_properties_typeProperties_server')]"
+					},
+					"Synapse Serverless_properties_typeProperties_database": {
+						"value": "[parameters('Synapse Serverless_properties_typeProperties_database')]"
+					},
+					"Synapse Serverless_properties_typeProperties_userName": {
+						"value": "[parameters('Synapse Serverless_properties_typeProperties_userName')]"
 					},
 					"httpsource_properties_typeProperties_url": {
 						"value": "[parameters('httpsource_properties_typeProperties_url')]"
