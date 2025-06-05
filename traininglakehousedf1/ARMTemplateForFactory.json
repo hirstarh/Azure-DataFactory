@@ -275,6 +275,56 @@
 								"enablePartitionDiscovery": false
 							}
 						}
+					},
+					{
+						"name": "Create Gold Layer Tables",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Cleanup Gold Data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[create_gold_tables]",
+							"storedProcedureParameters": {
+								"goldns": {
+									"value": {
+										"value": "@pipeline().parameters.GOLD_LAYER_NAMESPACE",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"format": {
+									"value": {
+										"value": "@pipeline().parameters.EXT_TAB_FILE_FORMAT",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"extds": {
+									"value": {
+										"value": "@pipeline().parameters.EXT_DATA_SOURCE",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "Synapse Serverless",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"policy": {
